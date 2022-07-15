@@ -1,0 +1,59 @@
+:host {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dialog-backdrop-bg, rgba(0, 0, 0, 0.25));
+  z-index: var(--dialog-z-index, 1001);
+  animation: fadeIn var(--dialog-animation-duration, 160ms);
+
+  .dialog-container {
+    display: block;
+    position: relative;
+    background-color: var(--dialog-bg, #ffffff);
+    padding: var(--dialog-padding, 24px);
+    border-radius: var(--dialog-border-radius, 8px);
+    box-shadow: var(--dialog-shadow, rgba(9, 30, 66, 0.25) 0 4px 8px -2px, rgba(9, 30, 66, 0.08) 0 0 0 1px);
+    max-width: var(--dialog-max-width, 90vw);
+    max-height: var(--dialog-max-height, 90vh);
+    min-width: var(--dialog-min-width, 200px);
+    min-height: var(--dialog-min-height, 100px);
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+
+    .dialog-close {
+      position: absolute;
+      top: calc(var(--dialog-close-position, 24px) - 8px);
+      right: var(--dialog-close-position, 24px);
+      font-size: var(--dialog-close-size, 24px);
+      color: var(--dialog-close-color, #000000);
+      cursor: pointer;
+      z-index: 1;
+      opacity: 1;
+      transition: opacity 160ms;
+
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+}

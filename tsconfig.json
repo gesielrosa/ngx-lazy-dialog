@@ -10,7 +10,14 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "strictPropertyInitialization": false,
     "sourceMap": true,
+    "paths": {
+      "ngx-lazy-dialog": [
+        "dist/ngx-lazy-dialog/ngx-lazy-dialog",
+        "dist/ngx-lazy-dialog"
+      ]
+    },
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,

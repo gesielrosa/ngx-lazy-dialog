@@ -3,5 +3,49 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ngx-lazy-dialog": {
+      "projectType": "library",
+      "root": "projects/ngx-lazy-dialog",
+      "sourceRoot": "projects/ngx-lazy-dialog/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/ngx-lazy-dialog/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-lazy-dialog/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-lazy-dialog/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-lazy-dialog/src/test.ts",
+            "tsConfig": "projects/ngx-lazy-dialog/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-lazy-dialog/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ngx-lazy-dialog/**/*.ts",
+              "projects/ngx-lazy-dialog/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ngx-lazy-dialog",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }
