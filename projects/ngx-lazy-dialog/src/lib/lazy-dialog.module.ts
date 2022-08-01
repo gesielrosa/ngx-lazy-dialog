@@ -3,6 +3,8 @@ import {CommonModule} from '@angular/common';
 
 import {LazyDialogComponent} from './component';
 import {LazyDialogService} from './services';
+import {LAZY_DIALOG_CONFIG} from './tokens';
+import {LazyDialogGlobalConfig} from './models';
 
 @NgModule({
   declarations: [LazyDialogComponent],
@@ -10,10 +12,16 @@ import {LazyDialogService} from './services';
   exports: [LazyDialogComponent],
 })
 export class LazyDialogModule {
-  static forRoot(): ModuleWithProviders<LazyDialogModule> {
+  static forRoot(config?: LazyDialogGlobalConfig): ModuleWithProviders<LazyDialogModule> {
     return {
       ngModule: LazyDialogModule,
-      providers: [LazyDialogService],
+      providers: [
+        LazyDialogService,
+        {
+          provide: LAZY_DIALOG_CONFIG,
+          useValue: config,
+        },
+      ],
     };
   }
 }

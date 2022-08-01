@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 
-import {LazyDialogRef, ModuleWithLazyDialog} from '../models';
+import {LazyDialogConfig, LazyDialogRef, ModuleWithLazyDialog} from '../models';
+import {LAZY_DIALOG_CONFIG} from '../tokens';
 
 @Injectable()
 export class LazyDialogService {
@@ -18,6 +19,7 @@ export class LazyDialogService {
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
+    @Inject(LAZY_DIALOG_CONFIG) private _config: LazyDialogConfig,
     private _appRef: ApplicationRef,
     private _rendererFactory: RendererFactory2,
     private _injector: Injector
@@ -25,7 +27,11 @@ export class LazyDialogService {
     this._renderer = this._rendererFactory.createRenderer(null, null);
   }
 
-  async create<T>(module: Type<ModuleWithLazyDialog<T>>, data?: any, customClass?: string): Promise<LazyDialogRef> {
+  async create<ComponentType, DataType>(
+    module: Type<ModuleWithLazyDialog<ComponentType>>,
+    data?: DataType,
+    config?: LazyDialogConfig
+  ): Promise<LazyDialogRef> {
     const moduleRef = createNgModuleRef(module);
 
     const customComponent = moduleRef.instance?.getDialog();
@@ -34,21 +40,25 @@ export class LazyDialogService {
       throw 'Dialog module not implements ModuleWithLazyDialog class';
     }
 
-    const containerElement = this._setupContainerDiv(customClass);
+    const containerElement = this._setupContainerDiv(config?.customClasses || this._config?.customClasses);
 
     const containerComponent = await import('../component/lazy-dialog.component');
 
     const containerComponentRef = this._appRef.bootstrap(containerComponent.LazyDialogComponent, containerElement);
 
-    const dialogRef = new LazyDialogRef(containerComponentRef, moduleRef, data);
+    const dialogRef = new LazyDialogRef<DataType>(containerComponentRef, moduleRef, data);
 
     containerComponentRef.instance.close = () => dialogRef.close();
+
+    if (config) {
+      containerComponentRef.instance.config = config;
+    }
 
     const dialogContainerVr = containerComponentRef.instance.dialogContainer;
 
     const injector = this._createInjector(dialogRef);
 
-    dialogContainerVr.createComponent<T>(customComponent, {
+    dialogContainerVr.createComponent<ComponentType>(customComponent, {
       injector,
       ngModuleRef: moduleRef,
     });

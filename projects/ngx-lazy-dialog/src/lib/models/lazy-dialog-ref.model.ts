@@ -3,17 +3,17 @@ import {firstValueFrom, Subject, take} from 'rxjs';
 
 import {LazyDialogComponent} from '../component';
 
-export class LazyDialogRef {
+export class LazyDialogRef<T = any> {
   private _close$ = new Subject<any>();
 
-  get data() {
+  get data(): T | undefined {
     return this._data;
   }
 
   constructor(
     private _containerComponentRef: ComponentRef<LazyDialogComponent>,
     private _moduleRef: NgModuleRef<any>,
-    private _data?: any
+    private _data?: T
   ) {}
 
   public close(output?: any): void {
