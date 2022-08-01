@@ -1,32 +1,35 @@
 import {ComponentRef, NgModuleRef} from '@angular/core';
-import {Subject} from 'rxjs';
+import {firstValueFrom, Subject, take} from 'rxjs';
 
 import {LazyDialogComponent} from '../component';
-import {LazyDialog} from './lazy-dialog.model';
 
-export class LazyDialogRef {
+export class LazyDialogRef<T = any> {
   private _close$ = new Subject<any>();
+
+  get data(): T | undefined {
+    return this._data;
+  }
 
   constructor(
     private _containerComponentRef: ComponentRef<LazyDialogComponent>,
-    private _componentRef: ComponentRef<LazyDialog>,
-    private _moduleRef: NgModuleRef<any>
-  ) {
-    this._componentRef.instance.dialogRef = this;
-  }
+    private _moduleRef: NgModuleRef<any>,
+    private _data?: T
+  ) {}
 
   public close(output?: any): void {
     this._close$.next(output);
-    this.destroy$();
+    this._containerComponentRef.instance
+      .dismiss$()
+      .pipe(take(1))
+      .subscribe(() => this._destroy());
   }
 
   public onClose(): Promise<any> {
-    return this._close$.toPromise();
+    return firstValueFrom(this._close$);
   }
 
-  private destroy$(): void {
+  private _destroy(): void {
     this._containerComponentRef.destroy();
-    this._componentRef.destroy();
     this._moduleRef.destroy();
     this._close$.complete();
   }

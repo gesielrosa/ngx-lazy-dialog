@@ -4,9 +4,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--dialog-backdrop-bg, rgba(0, 0, 0, 0.25));
   z-index: var(--dialog-z-index, 1001);
   animation: fadeIn var(--dialog-animation-duration, 160ms);
+
+  .dialog-backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--dialog-backdrop-bg, rgba(0, 0, 0, 0.25));
+    z-index: 1;
+  }
 
   .dialog-container {
     display: block;
@@ -21,6 +27,7 @@
     min-height: var(--dialog-min-height, 100px);
     overflow-y: auto;
     overflow-wrap: anywhere;
+    z-index: 2;
 
     .dialog-close {
       position: absolute;

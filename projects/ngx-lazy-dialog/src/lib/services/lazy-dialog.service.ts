@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 
-import {LazyDialog, LazyDialogRef, ModuleWithLazyDialog} from '../models';
+import {LazyDialogConfig, LazyDialogRef, ModuleWithLazyDialog} from '../models';
+import {LAZY_DIALOG_CONFIG} from '../tokens';
 
 @Injectable()
 export class LazyDialogService {
@@ -18,6 +19,7 @@ export class LazyDialogService {
 
   constructor(
     @Inject(DOCUMENT) private _document: Document,
+    @Inject(LAZY_DIALOG_CONFIG) private _config: LazyDialogConfig,
     private _appRef: ApplicationRef,
     private _rendererFactory: RendererFactory2,
     private _injector: Injector
@@ -25,35 +27,50 @@ export class LazyDialogService {
     this._renderer = this._rendererFactory.createRenderer(null, null);
   }
 
-  async create<T extends LazyDialog>(
-    module: Type<ModuleWithLazyDialog<T>>,
-    params?: any,
-    customClass?: string
+  async create<ComponentType, DataType>(
+    module: Type<ModuleWithLazyDialog<ComponentType>>,
+    data?: DataType,
+    config?: LazyDialogConfig
   ): Promise<LazyDialogRef> {
-    // fix "ApplicationRef.tick() is called recursively" error
-    await new Promise<void>((resolve) => setTimeout(() => resolve(), 50));
+    const moduleRef = createNgModuleRef(module);
 
-    const container = this._setupContainerDiv(customClass);
+    const customComponent = moduleRef.instance?.getDialog();
 
-    const dialogComponentContainer = await import('../component/lazy-dialog.component');
-
-    const containerRef = this._appRef.bootstrap(dialogComponentContainer.LazyDialogComponent, container);
-
-    const moduleRef = createNgModuleRef(module, this._injector);
-
-    const component = moduleRef.instance?.getDialog();
-
-    if (!component) {
-      throw 'Dialog module not extends or implements ModuleWithLazyDialog class';
+    if (!customComponent) {
+      throw 'Dialog module not implements ModuleWithLazyDialog class';
     }
 
-    const componentRef = containerRef.instance.create<T>(component, moduleRef);
+    const containerElement = this._setupContainerDiv(config?.customClasses || this._config?.customClasses);
 
-    if (params) {
-      componentRef.instance.onParams(params);
+    const containerComponent = await import('../component/lazy-dialog.component');
+
+    const containerComponentRef = this._appRef.bootstrap(containerComponent.LazyDialogComponent, containerElement);
+
+    const dialogRef = new LazyDialogRef<DataType>(containerComponentRef, moduleRef, data);
+
+    containerComponentRef.instance.close = () => dialogRef.close();
+
+    if (config) {
+      containerComponentRef.instance.config = config;
     }
 
-    return new LazyDialogRef(containerRef, componentRef, moduleRef);
+    const dialogContainerVr = containerComponentRef.instance.dialogContainer;
+
+    const injector = this._createInjector(dialogRef);
+
+    dialogContainerVr.createComponent<ComponentType>(customComponent, {
+      injector,
+      ngModuleRef: moduleRef,
+    });
+
+    return dialogRef;
+  }
+
+  private _createInjector(dialogRef: LazyDialogRef): Injector {
+    return Injector.create({
+      parent: this._injector,
+      providers: [{provide: LazyDialogRef, useValue: dialogRef}],
+    });
   }
 
   private _setupContainerDiv(customClass?: string): HTMLElement {
