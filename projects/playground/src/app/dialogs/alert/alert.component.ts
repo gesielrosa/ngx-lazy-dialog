@@ -10,9 +10,9 @@ import {LazyDialogRef} from '../../../../../ngx-lazy-dialog/src/lib';
 export class AlertComponent implements OnInit {
   public model: string;
 
-  constructor(private _ref: LazyDialogRef) {}
+  public constructor(private _ref: LazyDialogRef) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     console.log(this._ref?.data);
   }
 }
