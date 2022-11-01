@@ -12,7 +12,7 @@ import {LazyDialogGlobalConfig} from './models';
   exports: [LazyDialogComponent],
 })
 export class LazyDialogModule {
-  static forRoot(config?: LazyDialogGlobalConfig): ModuleWithProviders<LazyDialogModule> {
+  public static forRoot(config?: LazyDialogGlobalConfig): ModuleWithProviders<LazyDialogModule> {
     return {
       ngModule: LazyDialogModule,
       providers: [

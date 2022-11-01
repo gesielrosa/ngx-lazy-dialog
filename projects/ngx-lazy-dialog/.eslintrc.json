@@ -10,8 +10,8 @@
       ],
       "parserOptions": {
         "project": [
-          "projects/ngx-lazy-dialog/tsconfig.lib.json",
-          "projects/ngx-lazy-dialog/tsconfig.spec.json"
+          "tsconfig.lib.json",
+          "tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },
