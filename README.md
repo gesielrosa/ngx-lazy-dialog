@@ -17,6 +17,19 @@ The dialog is fully customizable!
 
 ---
 
+## Table of Contents
+
+- [Installation](#installation)
+- [How to use](#how-to-use)
+  * [Module approach tutorial](#module-approach-tutorial)
+  * [Standalone approach tutorial](#standalone-approach-tutorial)
+  * [Customizing the container and backdrop](#customizing-the-container-and-backdrop)
+- [Breaking Changes](#breaking-changes)
+  * [2.0.0 (2022-11-01)](#200--2022-11-01-)
+  * [1.0.0 (2022-08-01)](#100--2022-08-01-)
+
+---
+
 ## Installation
 
 The ngx-lazy-dialog can be installed with npm:
@@ -46,7 +59,7 @@ export class AppModule {}
 
 ## How to use
 
-### [Module approach tutorial]
+### Module approach tutorial
 
 Each dialog component should have your own module, so generate a dialog component and module using Angular CLI:
 
@@ -155,7 +168,7 @@ async openDialog(): Promise<void> {
 // ...
 ```
 
-### [Standalone approach tutorial]
+### Standalone approach tutorial
 
 Generate a standalone dialog component using Angular CLI:
 
