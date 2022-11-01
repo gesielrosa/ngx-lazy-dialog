@@ -8,23 +8,22 @@ dependency injections. Each dialog is completely independent of the rest of the 
 
 The dialog is fully customizable!
 
+**Standalone components are supported now!**
+
 | Version | Angular Version |
 |---------|-----------------|
+| 2.x.x   | 14.x.x          |
 | 1.x.x   | 13.x.x          |
 
 ---
 
-### Installation
+## Installation
 
 The ngx-lazy-dialog can be installed with npm:
 
 `npm i ngx-lazy-dialog --save`
 
----
-
-### How to use (a simple approach tutorial)
-
-To start, import `LazyDialogModule` in your app root module like `app.module.ts`:
+Import `LazyDialogModule` in your app root module like `app.module.ts`:
 
 ```ts
 // ...
@@ -42,6 +41,12 @@ import { LazyDialogModule } from 'ngx-lazy-dialog';
 })
 export class AppModule {}
 ```
+
+---
+
+## How to use
+
+### [Module approach tutorial]
 
 Each dialog component should have your own module, so generate a dialog component and module using Angular CLI:
 
@@ -106,7 +111,7 @@ In `alert.component.html` file, we can add a simple template as example:
 ```angular2html
 <p>Alert dialog</p>
 <button (click)="close()">Close</button>
-<button (click)="close({bar: 'foo'})">Close with callback data</button>
+<button (click)="close({bar: 'foo'})">Close with output data</button>
 ```
 
 It's done. Now we are going to open the dialog in another component from our app:
@@ -118,9 +123,9 @@ import { LazyDialogService } from 'ngx-lazy-dialog';
 constructor(private _service: LazyDialogService) {
 }
 // ...
-async openDialog(): Promise<void> {
+async openDialog() {
   const module = await import('./dialogs/alert/alert.module').then(m => m.AlertModule);
-  this._service.create(module);
+  this._service.create({module});
 }
 //...
 ```
@@ -142,9 +147,104 @@ async openDialog(): Promise<void> {
     customClasses: 'my-custom-class',
   };
 
-  const dialog = await this._service.create(module, data, config);
-  dialog.onClose().then(callbackData => {
-    console.log(callbackData);
+  const dialog = await this._service.create({module, data, config});
+  dialog.onClose().then((output) => {
+    console.log(output);
+  });
+}
+// ...
+```
+
+### [Standalone approach tutorial]
+
+Generate a standalone dialog component using Angular CLI:
+
+```
+ng g component --standalone dialogs/alert
+```
+
+After generating dialog and module, the folder structure should be like this:
+
+```
+app   
+└───dialogs
+│   │   alert
+│   │   │   alert.component.html
+│   │   │   alert.component.scss
+│   │   │   alert.component.ts
+```
+
+We need to modify the `alert.component.ts` file if you want to call close function or receive data in the dialog:
+
+```ts
+// ...
+import { LazyDialogRef } from 'ngx-lazy-dialog';
+// ...
+@Component({
+  // ...
+  standalone: true
+})
+export class AlertComponent implements OnInit {
+  public myData: any
+  
+  constructor(private _dialogRef: LazyDialogRef) {
+  }
+  
+  ngOnInit() {
+    // getting data
+    this.myData = this._dialogRef.data;
+  }
+  
+  close(data?: any) {
+    // closing dialog
+    this._dialogRef.close(data);
+  }
+}
+```
+In `alert.component.html` file, we can add a simple template as example:
+
+```angular2html
+<p>Alert dialog</p>
+<button (click)="close()">Close</button>
+<button (click)="close({bar: 'foo'})">Close with output data</button>
+```
+
+It's done. Now we are going to open the dialog in another component from our app:
+
+```ts
+// ...
+import { LazyDialogService } from 'ngx-lazy-dialog';
+// ...
+constructor(private _service: LazyDialogService) {
+}
+// ...
+async openDialog() {
+  const component = await import('./dialogs/alert/alert.component').then(m => m.AlertComponent);
+  this._service.create({component});
+}
+//...
+```
+
+You can try to add data and config to dialog creation or get a callback data:
+
+```ts
+// ...
+async openDialog() {
+  const component = await import('./dialogs/alert/alert.component').then(m => m.AlertComponent);
+  
+  const data = {
+    foo: 'bar'
+  };
+
+  const config: LazyDialogConfig = {
+    closeOnBackdropClick: false,
+    closeButton: false,
+    customClasses: 'my-custom-class',
+  };
+
+  const dialog = await this._service.create({component, data, config});
+  dialog.onClose().then((output) => {
+    console.log(output);
   });
 }
 // ...
@@ -195,12 +295,16 @@ Or create a css class and add to dialog creation:
 ```
 
 ```ts
-this.service.create(component, data, {customClasses: 'custom-dialog'});
+this.service.create({component, data, config: {customClasses: 'custom-dialog'}});
 ```
 
 ---
 
 ## Breaking Changes
+
+### 2.0.0 (2022-11-01)
+
+- New argument type to the `create` function on `LazyDialogService`. Now you need to pass only one object: `LazyDialogCreateConfig`.
 
 ### 1.0.0 (2022-08-01)
 
