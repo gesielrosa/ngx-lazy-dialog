@@ -6,6 +6,7 @@ import {LAZY_DIALOG_CONFIG} from '../tokens';
 import {LazyDialogConfig, LazyDialogGlobalConfig} from '../models';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'lazy-dialog',
   template: `
     <div class="dialog-container">
@@ -39,7 +40,7 @@ export class LazyDialogComponent {
       : true;
   }
 
-  constructor(
+  public constructor(
     @Inject(LAZY_DIALOG_CONFIG) private _globalConfig: LazyDialogGlobalConfig,
     private _el: ElementRef<HTMLElement>
   ) {}
