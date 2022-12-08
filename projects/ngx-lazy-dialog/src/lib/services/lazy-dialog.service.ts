@@ -85,7 +85,7 @@ export class LazyDialogService {
 
   private _setupContainerDiv(customClass?: string): HTMLElement {
     const dialogContainer = this._renderer.createElement('div');
-    this._renderer.addClass(dialogContainer, 'dialog-root');
+    this._renderer.addClass(dialogContainer, 'lazy-dialog-root');
 
     if (customClass) {
       this._renderer.addClass(dialogContainer, customClass);
