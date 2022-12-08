@@ -4,12 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build ngx-lazy-dialog",
+    "build": "ng build ngx-lazy-dialog && npm run postbuild",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
     "publish": "npm publish ./dist/ngx-lazy-dialog",
-    "publish:dev": "npm run publish -- --tag dev"
+    "publish:dev": "npm run publish -- --tag dev",
+    "postbuild": "ts-node postbuild.ts"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +51,7 @@
     "ng-packagr": "^15.0.1",
     "prettier": "^2.7.1",
     "prettier-eslint": "^15.0.1",
+    "ts-node": "^10.9.1",
     "typescript": "~4.8.4"
   }
 }
