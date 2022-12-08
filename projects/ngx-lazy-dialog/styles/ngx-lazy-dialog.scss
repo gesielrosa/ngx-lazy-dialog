@@ -1,20 +1,20 @@
-:host {
+.lazy-dialog-root {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: var(--dialog-z-index, 1001);
-  animation: fadeIn var(--dialog-animation-duration, 160ms);
+  animation: lazyDialogFadeIn var(--dialog-animation-duration, 160ms);
 
-  .dialog-backdrop {
+  .lazy-dialog-backdrop {
     position: absolute;
     inset: 0;
     background: var(--dialog-backdrop-bg, rgba(0, 0, 0, 0.25));
     z-index: 1;
   }
 
-  .dialog-container {
+  .lazy-dialog-container {
     display: block;
     position: relative;
     background-color: var(--dialog-bg, #ffffff);
@@ -29,7 +29,7 @@
     overflow-wrap: anywhere;
     z-index: 2;
 
-    .dialog-close {
+    .lazy-dialog-close {
       position: absolute;
       top: calc(var(--dialog-close-position, 24px) - 8px);
       right: var(--dialog-close-position, 24px);
@@ -46,7 +46,7 @@
     }
   }
 
-  @keyframes fadeIn {
+  @keyframes lazyDialogFadeIn {
     from {
       opacity: 0;
     }
@@ -55,7 +55,7 @@
     }
   }
 
-  @keyframes fadeOut {
+  @keyframes lazyDialogFadeOut {
     from {
       opacity: 1;
     }

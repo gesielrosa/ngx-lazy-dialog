@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ElementRef, Inject, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
 import {fromEvent, map, noop, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 
@@ -9,13 +9,13 @@ import {LazyDialogConfig, LazyDialogGlobalConfig} from '../models';
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'lazy-dialog',
   template: `
-    <div class="dialog-container">
-      <div aria-label="Close" class="dialog-close" *ngIf="shouldShowClose" (click)="close()">&times;</div>
+    <div class="lazy-dialog-container">
+      <div aria-label="Close" class="lazy-dialog-close" *ngIf="shouldShowClose" (click)="close()">&times;</div>
       <ng-template #dialogContainer></ng-template>
     </div>
-    <div class="dialog-backdrop" (click)="onClickBackdrop()"></div>
+    <div class="lazy-dialog-backdrop" (click)="onClickBackdrop()"></div>
   `,
-  styleUrls: ['./lazy-dialog.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LazyDialogComponent {
   @ViewChild('dialogContainer', {read: ViewContainerRef}) public dialogContainer: ViewContainerRef;
@@ -46,10 +46,10 @@ export class LazyDialogComponent {
   ) {}
 
   public dismiss$(): Observable<void> {
-    this._el.nativeElement.style.animation = 'fadeOut var(--dialog-animation-duration, 160ms)';
+    this._el.nativeElement.style.animation = 'lazyDialogFadeOut var(--dialog-animation-duration, 160ms)';
 
     return fromEvent<AnimationEvent>(this._el.nativeElement, 'animationend').pipe(
-      filter((event) => event.animationName === 'fadeOut'),
+      filter((event) => event.animationName === 'lazyDialogFadeOut'),
       map(noop)
     );
   }
