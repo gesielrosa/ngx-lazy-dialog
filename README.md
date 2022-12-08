@@ -12,6 +12,7 @@ The dialog is fully customizable!
 
 | Version | Angular Version |
 |---------|-----------------|
+| 3.x.x   | 15.x.x          |
 | 2.x.x   | 14.x.x          |
 | 1.x.x   | 13.x.x          |
 
@@ -21,10 +22,11 @@ The dialog is fully customizable!
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
-  * [Module approach tutorial](#module-approach-tutorial)
-  * [Standalone approach tutorial](#standalone-approach-tutorial)
+  * [Module tutorial](#module-tutorial)
+  * [Standalone tutorial](#standalone-tutorial)
   * [Customizing the container and backdrop](#customizing-the-container-and-backdrop)
 - [Breaking Changes](#breaking-changes)
+  * [3.0.0 (2022-12-08)](#200--2022-12-08-)
   * [2.0.0 (2022-11-01)](#200--2022-11-01-)
   * [1.0.0 (2022-08-01)](#100--2022-08-01-)
 
@@ -54,12 +56,16 @@ import { LazyDialogModule } from 'ngx-lazy-dialog';
 })
 export class AppModule {}
 ```
+Import styles to `styles.scss` of your project:
 
+```scss
+@import 'node_modules/ngx-lazy-dialog/styles/ngx-lazy-dialog.scss';
+```
 ---
 
 ## How to use
 
-### Module approach tutorial
+### Module tutorial
 
 Each dialog component should have your own module, so generate a dialog component and module using Angular CLI:
 
@@ -168,7 +174,7 @@ async openDialog(): Promise<void> {
 // ...
 ```
 
-### Standalone approach tutorial
+### Standalone tutorial
 
 Generate a standalone dialog component using Angular CLI:
 
@@ -314,6 +320,10 @@ this.service.create({component, data, config: {customClasses: 'custom-dialog'}})
 ---
 
 ## Breaking Changes
+
+### 3.0.0 (2022-12-08)
+
+- Need to import new `ngx-lazy-dialog.scss` file to your app global style file (like styles.scss)
 
 ### 2.0.0 (2022-11-01)
 
